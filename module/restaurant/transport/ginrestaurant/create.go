@@ -1,6 +1,7 @@
-package gin_restaurant
+package ginrestaurant
 
 import (
+	"awesomeProject/common"
 	"awesomeProject/component/appctx"
 	restaurantModel "awesomeProject/module/restaurant/model"
 	restaurantService "awesomeProject/module/restaurant/service"
@@ -12,6 +13,13 @@ import (
 func CreateRestaurant(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		db := appCtx.GetMainDBConnection()
+
+		//go func() {
+		//	defer common.AppRecover()
+		//
+		//	arr := []int{}
+		//	log.Println(arr[0])
+		//}()
 
 		var data restaurantModel.RestaurantCreate
 
@@ -26,6 +34,9 @@ func CreateRestaurant(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"data": data})
+		data.Mask(false)
+
+		ctx.JSON(http.StatusOK, common.SimpleSuccessResponse(data.FakeId.String()))
+
 	}
 }
