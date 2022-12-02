@@ -1,17 +1,27 @@
 package appctx
 
-import "gorm.io/gorm"
+import (
+	"awesomeProject/component/uploadprovider"
+	"gorm.io/gorm"
+)
 
 type AppContext interface {
 	GetMainDBConnection() *gorm.DB
+	GetUploadProvider() uploadprovider.UploadProvider
 }
 
 type appCtx struct {
-	db *gorm.DB
+	db             *gorm.DB
+	uploadProvider uploadprovider.UploadProvider
+}
+
+func NewAppContext(db *gorm.DB, provider uploadprovider.UploadProvider) *appCtx {
+	return &appCtx{db: db, uploadProvider: provider}
 }
 
 func (ctx appCtx) GetMainDBConnection() *gorm.DB {
 	return appCtx{}.db
 }
-
-func NewAppContext(db *gorm.DB) *appCtx { return &appCtx{db: db} }
+func (ctx appCtx) GetUploadProvider() uploadprovider.UploadProvider {
+	return appCtx{}.uploadProvider
+}
